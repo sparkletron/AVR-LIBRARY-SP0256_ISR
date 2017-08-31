@@ -39,7 +39,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //librarys for avr micro controller
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <avr/delay.h>
+#include <util/delay.h>
 #include <inttypes.h>
 //included for _END
 #include "allophones.h"
