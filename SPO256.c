@@ -32,7 +32,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <avr/common.h>
 #include <avr/interrupt.h>
 //interface file
-#include "ISR.h"
+#include "SPO256.h"
 #include "commonDefines.h"
 
 //global variables
@@ -80,6 +80,11 @@ ISR(PCINT2_vect)
 }
 void initSP0256()
 {
+	uint8_t tmpSREG = 0;
+
+	tmpSREG = SREG;
+	cli();
+
 	alophoneData.PORT = &PORTD;
 	alophoneData.busyFLAG = FLAG_OFF;
 	alophoneData.phrase = defaultPhrase;
@@ -92,6 +97,8 @@ void initSP0256()
 	PCMSK2 = (1 << PCINT23);
 	//set port to 0, clear any misc values
 	*(alophoneData.PORT) = PA1;
+
+	SREG = tmpSREG;
 	//enable interrupts
 	sei();
 }
@@ -115,7 +122,7 @@ int talk(uint8_t *phraseToLoad)
 	//Pulse ALD pin high then low to load data into register
 	pulseDataPort();
 	SREG = bufSREG;
-	
+
 	return 0;
 }
 
