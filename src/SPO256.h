@@ -50,7 +50,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 void initSP0256();
 //calling this function and passing it an array of allophones will start the speech process
 //returns 1 aka "BUSY_TALKING" if pharse is being processed. 0 if no phrase is being processed.
-int talk(uint8_t *);
+int talkSP0256(uint8_t *);
 
 
 

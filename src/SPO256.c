@@ -32,8 +32,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <avr/common.h>
 #include <avr/interrupt.h>
 //interface file
-
-
 #include "SPO256.h"
 #include "commonDefines.h"
 
@@ -44,42 +42,18 @@ uint8_t *phrase = 0;
 typedef struct
 {
 	volatile uint8_t *PORT;
-	uint8_t *phrase;
-	uint8_t busyFLAG:1;
+	volatile uint8_t *phrase;
+	volatile uint8_t busyFLAG:1;
 
 } alophoneStruct;
 
 uint8_t defaultPhrase[] = {_END};
 volatile alophoneStruct alophoneData;
 
+//helper functions
 void pulseDataPort();
 
-//ISR vector, static may or may not work
-ISR(PCINT2_vect)
-{
-	//create temp value for checking LRQ state
-	uint8_t data;
-	//check LRQ pin
-	data = (PIND & (1 << DDD7)) >> DD7;
-	//if LRQ pin is high (1, ON) then chip is not ready to load data, exit
-	if(data) return;
-	//check for end of phrase
-	if(*(alophoneData.phrase) == _END)
-	{
-		//since phrase has ended, set phraseLoaded flag to off
-		alophoneData.busyFLAG = FLAG_OFF;
-		//load required pause at end of phrase
-		*(alophoneData.PORT) = PA1;
-		//pulse ALD pin to load data
-		pulseDataPort();
-		return;
-	}
-	alophoneData.phrase++;
-	//assign phrase element to port
-	*(alophoneData.PORT) = *(alophoneData.phrase);
-	pulseDataPort();
-	//pulse ALD
-}
+//public functions
 void initSP0256()
 {
 	uint8_t tmpSREG = 0;
@@ -105,7 +79,7 @@ void initSP0256()
 	sei();
 }
 //Full function for loading phrase to pointer and starting first allophone
-int talk(uint8_t *phraseToLoad)
+int talkSP0256(uint8_t *phraseToLoad)
 {
 	uint8_t bufSREG = SREG;
 	cli();
@@ -123,15 +97,49 @@ int talk(uint8_t *phraseToLoad)
 	*(alophoneData.PORT) = *(alophoneData.phrase);
 	//Pulse ALD pin high then low to load data into register
 	pulseDataPort();
+	
 	SREG = bufSREG;
 
 	return 0;
 }
 
+//helper function
 //Pulse ALD pin high then low to load data into register
 void pulseDataPort()
 {
 	*(alophoneData.PORT) |= (1 << DDD6);
-	_delay_us(1);
+	_delay_us(100);
 	*(alophoneData.PORT) &= ~(1 << DDD6);
+}
+
+//ISR vector, static may or may not work
+ISR(PCINT2_vect)
+{
+	//create temp value for checking LRQ state
+	uint8_t data;
+	//check LRQ pin
+	data = (PIND & (1 << DDD7)) >> DD7;
+	//if LRQ pin is high (1, ON) then chip is not ready to load data, exit
+	if(data) return;
+	
+	if(alophoneData.busyFLAG == FLAG_OFF) return;
+
+	alophoneData.phrase++;
+	
+	//check for end of phrase
+	if(*(alophoneData.phrase) == _END)
+	{
+		//since phrase has ended, set phraseLoaded flag to off
+		alophoneData.busyFLAG = FLAG_OFF;
+		//load required pause at end of phrase
+		*(alophoneData.PORT) = PA1;
+		//pulse ALD pin to load data
+		pulseDataPort();
+		return;
+	}
+	//assign phrase element to port
+	*(alophoneData.PORT) = *(alophoneData.phrase);
+	
+	pulseDataPort();
+	//pulse ALD
 }
