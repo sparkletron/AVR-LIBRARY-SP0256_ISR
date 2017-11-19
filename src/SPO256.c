@@ -115,12 +115,8 @@ void pulseDataPort()
 //ISR vector, static may or may not work
 ISR(PCINT2_vect)
 {
-	//create temp value for checking LRQ state
-	uint8_t data;
-	//check LRQ pin
-	data = (PIND & (1 << DDD7)) >> DD7;
 	//if LRQ pin is high (1, ON) then chip is not ready to load data, exit
-	if(data) return;
+	if((PIND & (1 << DDD7)) >> DD7) return;
 	
 	if(alophoneData.busyFLAG == FLAG_OFF) return;
 
