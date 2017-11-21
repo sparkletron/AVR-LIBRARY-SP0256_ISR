@@ -41,8 +41,8 @@ int main(void)
 	
 	for(;;)
 	{
-		while(talkSP0256(hello);
-		while(talkSP0256(pause);
+		while(talkSP0256(hello));
+		while(talkSP0256(pause));
 	}
 }
 ```
