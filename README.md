@@ -1,4 +1,4 @@
-atmel328P SP0256 ISR method 
+# SP0256 ISR driver
 ======================
 
 Speech without busy wait (ISR), using SP0256
@@ -24,7 +24,25 @@ This code is licensed under the following GNU GPL V2 (also same notice in all so
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-
-At the moment this is a unfinished project, and will be my second using github.
-
 This will be a C library usuable in AVR Studio, and the generic AVR compiler.
+
+## Example
+```
+#include <inttypes.h>
+#include <avr/common.h>
+#include <avr/io.h>
+
+#include "words.h"
+#include "SPO256.h"
+
+int main(void)
+{
+	initSP0256();
+	
+	for(;;)
+	{
+		while(talkSP0256(hello);
+		while(talkSP0256(pause);
+	}
+}
+```
