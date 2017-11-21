@@ -37,12 +37,12 @@ This will be a C library usuable in AVR Studio, and the generic AVR compiler.
 
 int main(void)
 {
-	initSP0256();
+	initSPO256();
 	
 	for(;;)
 	{
-		while(talkSP0256(hello));
-		while(talkSP0256(pause));
+		while(talkSPO256(hello));
+		while(talkSPO256(pause));
 	}
 }
 ```

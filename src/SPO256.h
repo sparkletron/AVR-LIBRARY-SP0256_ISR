@@ -47,10 +47,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define BUSY_TALKING 1
 
 //initialize variables for talk routine
-void initSP0256();
+void initSPO256();
 //calling this function and passing it an array of allophones will start the speech process
 //returns 1 aka "BUSY_TALKING" if pharse is being processed. 0 if no phrase is being processed.
-int talkSP0256(uint8_t *);
+int talkSPO256(uint8_t *);
 
 
 

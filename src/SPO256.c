@@ -54,7 +54,7 @@ volatile alophoneStruct alophoneData;
 void pulseDataPort();
 
 //public functions
-void initSP0256()
+void initSPO256()
 {
 	uint8_t tmpSREG = 0;
 
@@ -79,7 +79,7 @@ void initSP0256()
 	sei();
 }
 //Full function for loading phrase to pointer and starting first allophone
-int talkSP0256(uint8_t *phraseToLoad)
+int talkSPO256(uint8_t *phraseToLoad)
 {
 	uint8_t bufSREG = SREG;
 	cli();
