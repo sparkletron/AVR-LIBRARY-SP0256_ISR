@@ -27,7 +27,7 @@ This code is licensed under the following GNU GPL V2 (also same notice in all so
 This will be a C library usuable in AVR Studio, and the generic AVR compiler.
 
 ## Example
-```
+```c
 #include <inttypes.h>
 #include <avr/common.h>
 #include <avr/io.h>
